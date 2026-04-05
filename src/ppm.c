@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "ppm.h"
 #include "types.h"
 
@@ -44,8 +45,16 @@ PPMImage *ppm_load(const char *path){
 
  fscanf(f, "%d %d %d", &width, &height, &maxval);
 
+ if (maxval > 255) {
+    fprintf(stderr, "ppm_load: 16-bit images not supported\n");
+    fclose(f);
+    return NULL;
+ }
+
  if (is_binary) {
-   fgetc(f);
+   int c;
+   while (isspace(c = fgetc(f)));
+   ungetc(c, f);
  }
 
  PPMImage *img = malloc(sizeof(PPMImage));
