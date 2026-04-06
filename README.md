@@ -13,20 +13,14 @@ Checkout what more creative people than me have been able to make with Piet.
 
 <div align="center">
 
-  <figure>
-    <img src="./media/artistic-hw.gif" alt="A very cool Hello World program">
-    <figcaption><i>A very cool "Hello World" program</i></figcaption>
-  </figure>
+  <img src="./media/artistic-hw.gif" alt="A very cool Hello World program"><br>
+  <i>A very cool "Hello World" program</i><br><br><br>
 
-  <figure>
-    <img src="./media/Piet-in-Piet.gif" alt="This program prints Piet">
-    <figcaption><i>This program prints "Piet"</i></figcaption>
-  </figure>
+  <img src="./media/Piet-in-Piet.gif" alt="This program prints Piet"><br>
+  <i>This program prints "Piet"</i><br><br><br>
 
-  <figure>
-    <img src="./media/bf-interpreter.gif" alt="Brainf*ck interpreter">
-    <figcaption><i>This is an entire interpreter for another esoteric language, Brainf*ck</i></figcaption>
-  </figure>
+  <img src="./media/bf-interpreter.gif" alt="Brainf*ck interpreter"><br>
+  <i>This is an entire interpreter for another esoteric language, Brainf*ck</i>
 
 </div>
 
