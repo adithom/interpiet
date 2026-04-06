@@ -40,7 +40,7 @@ static const char *op_name(PietOp op) {
     }
 }
 
-void interp_run(VM *vm, CodelGrid *grid, BlockMap *bm) {
+void interp_run(VM *vm, CodelGrid *grid, BlockMap *bm, int verbose) {
     int running = 1;
     int steps   = 0;
     static const char *dp_str[] = { "RIGHT", "DOWN", "LEFT", "UP" };
@@ -48,7 +48,7 @@ void interp_run(VM *vm, CodelGrid *grid, BlockMap *bm) {
 
     while (running) {
         if (steps >= STEP_LIMIT) {
-            fprintf(stderr, "[debug] STEP LIMIT (%d) reached — likely infinite loop. "
+            fprintf(stderr, "error: step limit (%d) reached — likely infinite loop. "
                             "Last position: (%d,%d) dp=%s cc=%s\n",
                     STEP_LIMIT, vm->x, vm->y,
                     dp_str[vm->dp], cc_str[vm->cc]);
@@ -107,17 +107,24 @@ void interp_run(VM *vm, CodelGrid *grid, BlockMap *bm) {
         PietOp op       = decode_instruction(old_color, new_color);
         int block_size  = cur_block->size;
 
-        static const char *color_name[] = {
-            "lred","red","dred","lyel","yel","dyel",
-            "lgrn","grn","dgrn","lcyn","cyn","dcyn",
-            "lblu","blu","dblu","lmag","mag","dmag",
-            "wht","blk","???"
-        };
-        fprintf(stderr, "[step %5d] (%2d,%2d)->(%2d,%2d) dp=%-5s cc=%-5s  %s->%s  op=%s (block_size=%d)\n",
-                steps, vm->x, vm->y, next_x, next_y,
-                dp_str[vm->dp], cc_str[vm->cc],
-                color_name[old_color], color_name[new_color],
-                op_name(op), block_size);
+        if (verbose) {
+            static const char *color_name[] = {
+                "lred","red","dred","lyel","yel","dyel",
+                "lgrn","grn","dgrn","lcyn","cyn","dcyn",
+                "lblu","blu","dblu","lmag","mag","dmag",
+                "wht","blk","???"
+            };
+            fprintf(stderr, "[step %5d] (%2d,%2d)->(%2d,%2d) dp=%-5s cc=%-5s  %s->%s  op=%-10s",
+                    steps, vm->x, vm->y, next_x, next_y,
+                    dp_str[vm->dp], cc_str[vm->cc],
+                    color_name[old_color], color_name[new_color],
+                    op_name(op));
+            fprintf(stderr, " stack(%d):[", vm->stack.top);
+            int show = vm->stack.top < 6 ? vm->stack.top : 6;
+            for (int i = vm->stack.top - 1; i >= vm->stack.top - show; i--)
+                fprintf(stderr, "%d%s", vm->stack.data[i], i > vm->stack.top - show ? " " : "");
+            fprintf(stderr, "]\n");
+        }
 
         switch (op) {
             case OP_NONE:      break;

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "types.h"
 #include "ppm.h"
 #include "grid.h"
@@ -10,13 +11,20 @@
 #include "interp.h"
 
 int main(int argc, char **argv) {
-    // parse args
-    if (argc < 2) {
-        fprintf(stderr, "usage: pietvm <image.ppm> [codel_size]\n");
+    // parse -v flag
+    int verbose    = 0;
+    int arg_offset = 1;
+    if (argc > 1 && strcmp(argv[1], "-v") == 0) {
+        verbose    = 1;
+        arg_offset = 2;
+    }
+
+    if (argc < arg_offset + 1) {
+        fprintf(stderr, "usage: pietvm [-v] <image.ppm> [codel_size]\n");
         return 1;
     }
-    const char *path = argv[1];
-    int codel_size   = (argc >= 3) ? atoi(argv[2]) : 1;
+    const char *path = argv[arg_offset];
+    int codel_size   = (argc >= arg_offset + 2) ? atoi(argv[arg_offset + 1]) : 1;
 
     if (codel_size < 1) {
         fprintf(stderr, "error: codel_size must be >= 1\n");
@@ -38,28 +46,31 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    // debug: print grid dimensions and color distribution
-    fprintf(stderr, "[debug] grid: %dx%d codels (codel_size=%d)\n",
-            grid->width, grid->height, codel_size);
+    // print grid dimensions and color distribution
+    if (verbose) {
+        fprintf(stderr, "[debug] grid: %dx%d codels (codel_size=%d)\n",
+                grid->width, grid->height, codel_size);
+    }
     {
         int counts[21] = {0};
         for (int i = 0; i < grid->width * grid->height; i++)
             counts[(int)grid->cells[i]]++;
-        const char *names[] = {
-            "light_red","red","dark_red","light_yellow","yellow","dark_yellow",
-            "light_green","green","dark_green","light_cyan","cyan","dark_cyan",
-            "light_blue","blue","dark_blue","light_magenta","magenta","dark_magenta",
-            "white","black","UNKNOWN"
-        };
-        for (int i = 0; i <= 20; i++) {
-            if (counts[i] > 0)
-                fprintf(stderr, "[debug]   %-16s: %d\n", names[i], counts[i]);
+        if (verbose) {
+            const char *names[] = {
+                "light_red","red","dark_red","light_yellow","yellow","dark_yellow",
+                "light_green","green","dark_green","light_cyan","cyan","dark_cyan",
+                "light_blue","blue","dark_blue","light_magenta","magenta","dark_magenta",
+                "white","black","UNKNOWN"
+            };
+            for (int i = 0; i <= 20; i++) {
+                if (counts[i] > 0)
+                    fprintf(stderr, "[debug]   %-16s: %d\n", names[i], counts[i]);
+            }
         }
         if (counts[20] > 0)
-            fprintf(stderr, "[debug] WARNING: %d UNKNOWN codels will act as walls\n", counts[20]);
+            fprintf(stderr, "warning: %d UNKNOWN codels will act as walls\n", counts[20]);
     }
-    // dump the full codel grid
-    {
+    if (verbose) {
         const char *sym[] = {
             "LR","R ","DR","LY","Y ","DY",
             "LG","G ","DG","LC","C ","DC",
@@ -82,7 +93,8 @@ int main(int argc, char **argv) {
         grid_free(grid);
         return 1;
     }
-    fprintf(stderr, "[debug] blockmap: %d blocks\n", bm->num_blocks);
+    if (verbose)
+        fprintf(stderr, "[debug] blockmap: %d blocks\n", bm->num_blocks);
 
     // init vm
     VM vm;
@@ -93,7 +105,7 @@ int main(int argc, char **argv) {
     vm.y     = 0;
 
     // run
-    interp_run(&vm, grid, bm);
+    interp_run(&vm, grid, bm, verbose);
 
     // cleanup
     stack_free(&vm.stack);

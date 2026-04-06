@@ -5,6 +5,6 @@
 #include "grid.h"
 #include "flood.h"
 
-void interp_run(VM *vm, CodelGrid *grid, BlockMap *bm);
+void interp_run(VM *vm, CodelGrid *grid, BlockMap *bm, int verbose);
 
 #endif

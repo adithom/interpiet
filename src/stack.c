@@ -48,8 +48,8 @@ void stack_roll(Stack *s, int depth, int count) {
     int base = s->top - depth;
 
     reverse(s->data + base, depth);
-    reverse(s->data + base, depth - count);    
-    reverse(s->data + base + (depth - count), count);
+    reverse(s->data + base, count);
+    reverse(s->data + base + count, depth - count);
 }
 
 void stack_free(Stack *s) {
