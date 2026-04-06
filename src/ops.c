@@ -1,6 +1,16 @@
 #include "ops.h"
 #include "stack.h"
 #include <stdio.h>
+#include <sys/select.h>
+
+// Returns 1 if stdin has data ready, 0 if not (non-blocking check).
+static int stdin_ready(void) {
+    fd_set fds;
+    FD_ZERO(&fds);
+    FD_SET(0, &fds);
+    struct timeval tv = {0, 0};
+    return select(1, &fds, NULL, NULL, &tv) > 0;
+}
 
 void op_add(VM *vm) {
     int b = stack_pop(&vm->stack);
@@ -83,12 +93,14 @@ void op_switch(VM *vm) {
 }
 
 void op_in_num(VM *vm) {
+    if (!stdin_ready()) return;
     int val;
     if (scanf("%d", &val) == 1)
         stack_push(&vm->stack, val);
 }
 
 void op_in_char(VM *vm) {
+    if (!stdin_ready()) return;
     int c = getchar();
     if (c != EOF)
         stack_push(&vm->stack, c);

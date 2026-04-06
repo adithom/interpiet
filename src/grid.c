@@ -65,3 +65,9 @@ CodelGrid *grid_build(PPMImage *img, int codel_size) {
 
     return g;
 } 
+
+void grid_free(CodelGrid *g) {
+    if (!g) return;
+    free(g->cells);
+    free(g);
+}
