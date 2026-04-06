@@ -31,7 +31,10 @@ void op_mod(VM *vm) {
     int b = stack_pop(&vm->stack);
     int a = stack_pop(&vm->stack);
     if (b == 0) return;
-    stack_push(&vm->stack, a % b);
+    int result = a % b;
+    if (result != 0 && (result < 0) != (b < 0))
+        result += b;
+    stack_push(&vm->stack, result);
 }
 
 void op_push(VM *vm, int block_size) {
@@ -61,6 +64,8 @@ void op_duplicate(VM *vm) {
 void op_roll(VM *vm) {
     int count = stack_pop(&vm->stack);
     int depth = stack_pop(&vm->stack);
+    if (depth < 0) return;
+    if (depth > vm->stack.top) return;
     stack_roll(&vm->stack, depth, count);
 }
 
@@ -77,4 +82,22 @@ void op_switch(VM *vm) {
         vm->cc = (vm->cc == CC_LEFT) ? CC_RIGHT : CC_LEFT;
 }
 
+void op_in_num(VM *vm) {
+    int val;
+    if (scanf("%d", &val) == 1)
+        stack_push(&vm->stack, val);
+}
 
+void op_in_char(VM *vm) {
+    int c = getchar();
+    if (c != EOF)
+        stack_push(&vm->stack, c);
+}
+
+void op_out_num(VM *vm) {
+    printf("%d", stack_pop(&vm->stack));
+}
+
+void op_out_char(VM *vm) {
+    printf("%c", (char)stack_pop(&vm->stack));
+}
