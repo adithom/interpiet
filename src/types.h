@@ -20,27 +20,27 @@ typedef enum {
 } CodelChooser;
 
 typedef enum {
-    COLOR_LIGHT_RED,
-    COLOR_RED,
-    COLOR_DARK_RED,
-    COLOR_LIGHT_YELLOW,
-    COLOR_YELLOW,
-    COLOR_DARK_YELLOW,
-    COLOR_LIGHT_GREEN,
-    COLOR_GREEN,
-    COLOR_DARK_GREEN,
-    COLOR_LIGHT_CYAN,
-    COLOR_CYAN,
-    COLOR_DARK_CYAN,
-    COLOR_LIGHT_BLUE,
-    COLOR_BLUE,
-    COLOR_DARK_BLUE,
-    COLOR_LIGHT_MAGENTA,
-    COLOR_MAGENTA,
-    COLOR_DARK_MAGENTA,
-    COLOR_WHITE,
-    COLOR_BLACK,
-    COLOR_UNKNOWN
+    COLOR_LIGHT_RED     = 0,
+    COLOR_RED           = 1,
+    COLOR_DARK_RED      = 2,
+    COLOR_LIGHT_YELLOW  = 3,
+    COLOR_YELLOW        = 4,
+    COLOR_DARK_YELLOW   = 5,
+    COLOR_LIGHT_GREEN   = 6,
+    COLOR_GREEN         = 7,
+    COLOR_DARK_GREEN    = 8,
+    COLOR_LIGHT_CYAN    = 9,
+    COLOR_CYAN          = 10,
+    COLOR_DARK_CYAN     = 11,
+    COLOR_LIGHT_BLUE    = 12,
+    COLOR_BLUE          = 13,
+    COLOR_DARK_BLUE     = 14,
+    COLOR_LIGHT_MAGENTA = 15,
+    COLOR_MAGENTA       = 16,
+    COLOR_DARK_MAGENTA  = 17,
+    COLOR_WHITE         = 18,
+    COLOR_BLACK         = 19,
+    COLOR_UNKNOWN       = 20
 } PietColor;
 
 typedef struct {
