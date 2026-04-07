@@ -10,6 +10,11 @@
 #include "ops.h"
 #include "interp.h"
 
+// TODO: full white region retry logic
+// when sliding through white hits a wall/black, spec requires restarting
+// the full 8-attempt DP/CC retry dance from the white entry point,
+// not terminating. currently we just stop. fix before compiler phase.
+
 int main(int argc, char **argv) {
     // parse -v flag
     int verbose    = 0;

@@ -48,3 +48,8 @@ make
 ```bash
 ./pietvm [-v] <image.ppm> [codel_size]
 ```
+
+### TODO
+
+1. Approximate color matching rather than demanding exacts.
+2. png-to-ppm converter builtin
